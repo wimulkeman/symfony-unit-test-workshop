@@ -1,0 +1,15 @@
+# Author: Qlico <tomkeur@qlico.io>
+version: "3.8"
+services:
+  php:
+    build:
+      context: ../
+      target: dev
+    container_name: ${PROJECT_NAME}-php
+    volumes:
+      - ../:/var/www/html
+      - ~/.composer:/home/qlico/.composer
+    environment:
+      - PHP_IDE_CONFIG=serverName=${PROJECT_NAME}
+    env_file:
+      - .env
