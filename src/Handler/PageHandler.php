@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Collection;
 
 class PageHandler
 {
-    public function supports(string $type)
+    public function supports(string $type): bool
     {
         return 'page' === $type;
     }
