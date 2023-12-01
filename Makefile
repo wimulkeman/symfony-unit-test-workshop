@@ -11,11 +11,7 @@ export HOST_GID=$(shell id -g)
 bootstrap:
 ifneq ("$(wildcard composer.json)","")
 	$(info ==> Installing composer dependencies...)
-	docker run -it \
-	--volume ${PWD}:/var/www/html${CACHED_FLAG} \
-	--volume ${HOME}/.composer:/home/qlico/.composer${CACHED_FLAG} \
-	--workdir /var/www/html --rm $(PHP_BASE_IMAGE_NAME) \
-	composer install --no-interaction --no-scripts
+	cd qlico && docker-compose exec php sh -c "composer install --no-interaction --no-scripts"
 endif
 
 .PHONY: build-php-base
