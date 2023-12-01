@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Handler;
+namespace Tests\Unit\Handler;
 
 use App\Handler\PageHandler;
 use Countable;

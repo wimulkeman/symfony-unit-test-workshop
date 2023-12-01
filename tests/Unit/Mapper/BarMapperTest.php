@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Mapper;
+namespace Tests\Unit\Mapper;
 
 use App\Mapper\BarMapper;
 use PHPUnit\Framework\TestCase;
