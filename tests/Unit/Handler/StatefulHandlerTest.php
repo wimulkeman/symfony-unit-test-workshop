@@ -13,7 +13,7 @@ class StatefulHandlerTest extends TestCase
         StateHandler::$state = 'idle';
     }
 
-    public function test_it_changes_it_state_when_a_process_is_running()
+    public function test_it_changes_it_state_when_a_process_is_running(): void
     {
         $stateHandler = new StateHandler();
         $this->assertSame('idle',$stateHandler->getState());
@@ -25,9 +25,17 @@ class StatefulHandlerTest extends TestCase
         $this->assertSame('pending',$stateHandler->getState());
     }
 
-    public function test_it_resets_its_internal_state()
+    public function test_it_resets_its_internal_state(): void
     {
         $stateHandler = new StateHandler();
         $this->assertSame('idle',$stateHandler->getState());
+    }
+
+    public function test_it_throws_an_exception_when_steps_are_skipped(): void
+    {
+        $this->expectException(LogicException::class);
+
+        $stateHandler = new StateHandler();
+        $stateHandler->stopRunning();
     }
 }
