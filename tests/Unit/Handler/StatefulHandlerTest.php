@@ -6,6 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 class StatefulHandlerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        StateHandler::$state = 'idle';
+    }
+
     public function test_it_changes_it_state_when_a_process_is_running()
     {
         $stateHandler = new StateHandler();
