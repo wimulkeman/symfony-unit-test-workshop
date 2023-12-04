@@ -55,25 +55,26 @@ class UserProviderTest extends TestCase
             789,
         ];
 
-        $user = new User();
-        $user2 = null;
-        $user3 = new User();
-
         $repo = $this->createMock(UserRepository::class);
 
+        $invoker = $this->exactly(3);
         $repo
-            ->expects($this->exactly(3))
+            ->expects($invoker)
             ->method('findById')
-            ->withConsecutive(
-                [123],
-                [456],
-                [789]
-            )
-            ->willReturnOnConsecutiveCalls(
-                $user,
-                $user2,
-                $user3
-            )
+            ->willReturnCallback(function ($id) use ($invoker): ?User {
+                match ($invoker->numberOfInvocations()) {
+                    1 => $this->assertSame(123, $id),
+                    2 => $this->assertSame(456, $id),
+                    3 => $this->assertSame(789, $id),
+                    default => $this->fail('Unexpected invocation'),
+                };
+
+                return match ($id) {
+                    123, 789 => new User(),
+                    456 => null,
+                    default => $this->fail('Unexpected invocation'),
+                };
+            })
         ;
 
         $provider = new UserProvider($repo);
