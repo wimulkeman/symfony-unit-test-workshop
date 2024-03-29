@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-drift": "^2.6",
         "phpunit/phpunit": "^10.0",
         "symfony/browser-kit": "^7.0",
         "symfony/css-selector": "^7.0",
