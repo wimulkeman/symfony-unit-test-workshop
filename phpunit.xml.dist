@@ -5,7 +5,14 @@
       <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
-  <coverage/>
+  <coverage includeUncoveredFiles="true"
+            pathCoverage="false"
+            ignoreDeprecatedCodeUnits="true"
+            disableCodeCoverageIgnore="true">
+    <report>
+      <html outputDirectory="test-reports/phpunit"/>
+    </report>
+  </coverage>
   <source>
     <include>
       <directory suffix=".php">./src</directory>
