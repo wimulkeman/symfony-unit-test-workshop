@@ -1,44 +1,33 @@
 <?php
 
-namespace Tests\Unit\Handler;
-
 use App\Handler\PageHandler;
-use Countable;
-use PHPUnit\Framework\TestCase;
 
-class PageHandlerTest extends TestCase
-{
-    public function test_it_supports_pages()
-    {
-        $handler = new PageHandler();
+test('it supports pages', function () {
+    $handler = new PageHandler();
 
-        $this->assertTrue($handler->supports('page'));
-    }
+    expect($handler->supports('page'))->toBeTrue();
+});
 
-    public function test_it_does_not_support_other_types()
-    {
-        $handler = new PageHandler();
+test('it does not support other types', function () {
+    $handler = new PageHandler();
 
-        $this->assertFalse($handler->supports('header'));
-    }
+    expect($handler->supports('header'))->toBeFalse();
+});
 
-    public function test_it_receives_the_correct_amount_of_items()
-    {
-        $handler = new PageHandler();
+test('it receives the correct amount of items', function () {
+    $handler = new PageHandler();
 
-        $handleResponse = $handler->handle('page-value');
+    $handleResponse = $handler->handle('page-value');
 
-        $this->assertInstanceOf(Countable::class, $handleResponse);
-        $this->assertCount(4, $handleResponse);
-    }
+    expect($handleResponse)->toBeInstanceOf(Countable::class);
+    expect($handleResponse)->toHaveCount(4);
+});
 
-    public function test_it_contains_the_expected_foo_item()
-    {
-        $handler = new PageHandler();
+test('it contains the expected foo item', function () {
+    $handler = new PageHandler();
 
-        $handleResponse = $handler->handle('page-value');
+    $handleResponse = $handler->handle('page-value');
 
-        $this->assertIsIterable($handleResponse);
-        $this->assertContains('foo', $handleResponse);
-    }
-}
+    expect($handleResponse)->toBeIterable();
+    expect($handleResponse)->toContain('foo');
+});

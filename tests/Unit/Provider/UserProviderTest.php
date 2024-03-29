@@ -1,84 +1,76 @@
 <?php
 
-namespace Tests\Unit\Provider;
-
 use App\Provider\UserProvider;
 use App\Repository\UserRepository;
-use PHPUnit\Framework\TestCase;
 use Tests\Stub\Entity\User;
 
-class UserProviderTest extends TestCase
-{
-    public function test_get_user_name_when_user_is_known()
-    {
-        $userId = 123;
 
-        $user = new User();
+test('get user name when user is known', function () {
+    $userId = 123;
 
-        $repo = $this->createMock(UserRepository::class);
+    $user = new User();
 
-        $repo
-            ->expects($this->once())
-            ->method('findById')
-            ->with($userId)
-            ->willReturn($user)
-        ;
+    $repo = $this->createMock(UserRepository::class);
 
-        $provider = new UserProvider($repo);
+    $repo
+        ->expects($this->once())
+        ->method('findById')
+        ->with($userId)
+        ->willReturn($user)
+    ;
 
-        $this->assertSame('John Doe', $provider->getName($userId));
-    }
+    $provider = new UserProvider($repo);
 
-    public function test_get_user_name_when_user_is_unknown()
-    {
-        $userId = 123;
+    expect($provider->getName($userId))->toBe('John Doe');
+});
 
-        $repo = $this->createMock(UserRepository::class);
+test('get user name when user is unknown', function () {
+    $userId = 123;
 
-        $repo
-            ->expects($this->once())
-            ->method('findById')
-            ->with($userId)
-            ->willReturn(null)
-        ;
+    $repo = $this->createMock(UserRepository::class);
 
-        $provider = new UserProvider($repo);
+    $repo
+        ->expects($this->once())
+        ->method('findById')
+        ->with($userId)
+        ->willReturn(null)
+    ;
 
-        $this->assertNull($provider->getName($userId));
-    }
+    $provider = new UserProvider($repo);
 
-    public function test_requesting_multiple_user_names_at_once()
-    {
-        $userIds = [
-            123,
-            456,
-            789,
-        ];
+    expect($provider->getName($userId))->toBeNull();
+});
 
-        $repo = $this->createMock(UserRepository::class);
+test('requesting multiple user names at once', function () {
+    $userIds = [
+        123,
+        456,
+        789,
+    ];
 
-        $invoker = $this->exactly(3);
-        $repo
-            ->expects($invoker)
-            ->method('findById')
-            ->willReturnCallback(function ($id) use ($invoker): ?User {
-                match ($invoker->numberOfInvocations()) {
-                    1 => $this->assertSame(123, $id),
-                    2 => $this->assertSame(456, $id),
-                    3 => $this->assertSame(789, $id),
-                    default => $this->fail('Unexpected invocation'),
-                };
+    $repo = $this->createMock(UserRepository::class);
 
-                return match ($id) {
-                    123, 789 => new User(),
-                    456 => null,
-                    default => $this->fail('Unexpected invocation'),
-                };
-            })
-        ;
+    $invoker = $this->exactly(3);
+    $repo
+        ->expects($invoker)
+        ->method('findById')
+        ->willReturnCallback(function ($id) use ($invoker): ?User {
+            match ($invoker->numberOfInvocations()) {
+                1 => expect($id)->toBe(123),
+                2 => expect($id)->toBe(456),
+                3 => expect($id)->toBe(789),
+                default => $this->fail('Unexpected invocation'),
+            };
 
-        $provider = new UserProvider($repo);
+            return match ($id) {
+                123, 789 => new User(),
+                456 => null,
+                default => $this->fail('Unexpected invocation'),
+            };
+        })
+    ;
 
-        $this->assertEquals(['John Doe', 'John Doe'], $provider->getNames($userIds));
-    }
-}
+    $provider = new UserProvider($repo);
+
+    expect($provider->getNames($userIds))->toEqual(['John Doe', 'John Doe']);
+});

@@ -1,41 +1,27 @@
 <?php
 
-
 use App\Handler\StateHandler;
-use PHPUnit\Framework\TestCase;
 
-class StatefulHandlerTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+beforeEach(function () {
+    StateHandler::$state = 'idle';
+});
+test('it changes it state when a process is running', function () {
+    $stateHandler = new StateHandler();
+    expect($stateHandler->getState())->toBe('idle');
 
-        StateHandler::$state = 'idle';
-    }
+    $stateHandler->startProcessing();
+    expect($stateHandler->getState())->toBe('processing');
 
-    public function test_it_changes_it_state_when_a_process_is_running(): void
-    {
-        $stateHandler = new StateHandler();
-        $this->assertSame('idle',$stateHandler->getState());
+    $stateHandler->keepRunning();
+    expect($stateHandler->getState())->toBe('pending');
+});
+test('it resets its internal state', function () {
+    $stateHandler = new StateHandler();
+    expect($stateHandler->getState())->toBe('idle');
+});
+test('it throws an exception when steps are skipped', function () {
+    $this->expectException(LogicException::class);
 
-        $stateHandler->startProcessing();
-        $this->assertSame('processing',$stateHandler->getState());
-
-        $stateHandler->keepRunning();
-        $this->assertSame('pending',$stateHandler->getState());
-    }
-
-    public function test_it_resets_its_internal_state(): void
-    {
-        $stateHandler = new StateHandler();
-        $this->assertSame('idle',$stateHandler->getState());
-    }
-
-    public function test_it_throws_an_exception_when_steps_are_skipped(): void
-    {
-        $this->expectException(LogicException::class);
-
-        $stateHandler = new StateHandler();
-        $stateHandler->stopRunning();
-    }
-}
+    $stateHandler = new StateHandler();
+    $stateHandler->stopRunning();
+});

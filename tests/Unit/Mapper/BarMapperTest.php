@@ -1,23 +1,15 @@
 <?php
 
-namespace Tests\Unit\Mapper;
-
 use App\Mapper\BarMapper;
-use PHPUnit\Framework\TestCase;
 
-class BarMapperTest extends TestCase
-{
-    public function test_maps_the_correct_value()
-    {
-        $mapper = new BarMapper();
+test('maps the correct value', function () {
+    $mapper = new BarMapper();
 
-        $this->assertSame('foo', $mapper->map('bar'));
-    }
+    expect($mapper->map('bar'))->toBe('foo');
+});
 
-    public function test_it_returns_a_nulL_for_unknown_values()
-    {
-        $mapper = new BarMapper();
+test('it returns a nul l for unknown values', function () {
+    $mapper = new BarMapper();
 
-        $this->assertNull($mapper->map('not-bar'));
-    }
-}
+    expect($mapper->map('not-bar'))->toBeNull();
+});
